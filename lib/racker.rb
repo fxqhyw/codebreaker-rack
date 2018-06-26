@@ -1,4 +1,5 @@
 require 'erb'
+require 'yaml'
 require 'codebreaker'
 
 class Racker
@@ -15,6 +16,7 @@ class Racker
     case @request.path
     when '/' then index
     when '/guess' then make_guess
+    when '/hint' then hint
     else
       Rack::Response.new('Not Found', 404)
     end
@@ -28,6 +30,14 @@ class Racker
 
   def make_guess
     @game.make_guess(@request.params['guess'])
+    save_game
+    Rack::Response.new do |response|
+      response.redirect('/')
+    end
+  end
+
+  def hint
+    @request.session[:hint] = @game.hint
     save_game
     Rack::Response.new do |response|
       response.redirect('/')

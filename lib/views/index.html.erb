@@ -11,9 +11,25 @@
     <p>Available attempts: <%= @game.available_attempts %></p>
     <p>Available hints:  <%= @game.available_hints %></p>
     <form method="post" action="/guess">
-      <input name="guess" type="text" placeholder="Type your guess here..." autofocus>
+      <input name="guess" type="text" placeholder="Type your guess here..." pattern="^[1-6]{4}" autofocus>
       <input class="btn" type="submit" value="Submit">
     </form>
-    Results: <%= @game.made_guesses %>
+    <table>
+      <caption>TURNS</caption>
+        <tr>
+          <th>Guess</th>
+          <th>Result</th>
+        </tr>
+        <% @game.made_guesses.each_pair do |guess, result| %>
+          <tr>
+            <td><%= guess %></td>
+            <td><%= result %></td>
+          </tr>
+        <% end %>
+      </table>
+      <form class="hint" method="get" action="/hint">
+        <input class="btn" type="submit" value="Hint">
+      </form>
+      Hint: <%= @request.session[:hint] %>
   </body>
 </html>
