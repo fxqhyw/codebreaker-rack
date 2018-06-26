@@ -27,9 +27,14 @@
           </tr>
         <% end %>
       </table>
-      <form class="hint" method="get" action="/hint">
-        <input class="btn" type="submit" value="Hint">
-      </form>
+        <form class="restart" method="get" action="/restart">
+          <input class="btn" type="submit" value="Restart">
+        </form>
+      <% if @game.available_hints > 0 %>
+        <form class="hint" method="get" action="/hint">
+          <input class="btn" type="submit" value="Hint">
+        </form>
+      <% end %>
       Hint: <%= @request.session[:hint] %>
   </body>
 </html>

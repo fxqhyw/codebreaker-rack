@@ -17,6 +17,7 @@ class Racker
     when '/' then index
     when '/guess' then make_guess
     when '/hint' then hint
+    when '/restart' then restart
     else
       Rack::Response.new('Not Found', 404)
     end
@@ -39,6 +40,13 @@ class Racker
   def hint
     @request.session[:hint] = @game.hint
     save_game
+    Rack::Response.new do |response|
+      response.redirect('/')
+    end
+  end
+
+  def restart
+    @request.session[:game] = nil
     Rack::Response.new do |response|
       response.redirect('/')
     end
