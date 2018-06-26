@@ -8,11 +8,15 @@ class Racker
 
   def initialize(env)
     @request = Rack::Request.new(env)
+    @game = load_game
+    @results = @request.cookies['rusults'] || []
+    @guesses = @request.cookies['guesses'] || []
   end
 
   def response
     case @request.path
     when '/' then index
+    when '/guess' then make_guess
     else
       Rack::Response.new('Not Found', 404)
     end
@@ -21,8 +25,23 @@ class Racker
   private
 
   def index
-    @game ||= Codebreaker::Game.new
     Rack::Response.new(render('index.html.erb'))
+  end
+
+  def make_guess
+    @game.make_guess(@request.params['guess'])
+    save_game
+    Rack::Response.new do |response|
+      response.redirect('/')
+    end
+  end
+
+  def load_game
+    @request.session[:game] ||= Codebreaker::Game.new
+  end
+
+  def save_game
+    @request.session[:game] = @game
   end
 
   def render(template)
