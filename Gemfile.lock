@@ -4,7 +4,7 @@ GEM
     ast (2.4.0)
     diff-lcs (1.3)
     jaro_winkler (1.5.1)
-    lkr-codebreaker (0.2.3)
+    lkr-codebreaker (0.2.4)
     parallel (1.12.1)
     parser (2.5.1.0)
       ast (~> 2.4.0)

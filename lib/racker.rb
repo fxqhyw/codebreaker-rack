@@ -9,8 +9,6 @@ class Racker
   def initialize(env)
     @request = Rack::Request.new(env)
     @game = load_game
-    @results = @request.cookies['rusults'] || []
-    @guesses = @request.cookies['guesses'] || []
   end
 
   def response
