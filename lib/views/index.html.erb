@@ -10,10 +10,16 @@
     <p>Please, enter the code which contains 4 digits from 1 to 6 to make guess or take a hint which returns the secret digits in a random order.</p>
     <p>Available attempts: <%= @game.available_attempts %></p>
     <p>Available hints:  <%= @game.available_hints %></p>
-    <form method="post" action="/guess">
-      <input name="guess" type="text" placeholder="Type your guess here..." pattern="^[1-6]{4}" autofocus>
-      <input class="btn" type="submit" value="Submit">
-    </form>
+    <% if @request.session[:game_status] == 'won' %>
+    <p>You won</p>
+        <% elsif @game.available_attempts == 0 %>
+      <p>You lost!</p>      
+    <% else %>
+      <form method="post" action="/guess">
+        <input name="guess" type="text" placeholder="Type your guess here..." pattern="^[1-6]{4}" autofocus>
+        <input class="btn" type="submit" value="Submit">
+      </form>
+    <% end %>    
     <table>
       <caption>TURNS</caption>
         <tr>

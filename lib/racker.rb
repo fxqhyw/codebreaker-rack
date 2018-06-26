@@ -30,8 +30,9 @@ class Racker
   end
 
   def make_guess
-    @game.make_guess(@request.params['guess'])
+    result = @game.make_guess(@request.params['guess'])
     save_game
+    @request.session[:game_status] = 'won' if result == '++++'
     Rack::Response.new do |response|
       response.redirect('/')
     end
@@ -47,6 +48,8 @@ class Racker
 
   def restart
     @request.session[:game] = nil
+    @request.session[:game_status] = nil
+    @request.session[:hint] = nil
     Rack::Response.new do |response|
       response.redirect('/')
     end
