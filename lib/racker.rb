@@ -18,6 +18,8 @@ class Racker
     when '/guess' then make_guess
     when '/hint' then hint
     when '/restart' then restart
+    when '/save' then save_result
+    when '/score' then score
     else
       Rack::Response.new('Not Found', 404)
     end
@@ -27,6 +29,10 @@ class Racker
 
   def index
     Rack::Response.new(render('index.html.erb'))
+  end
+
+  def score
+    Rack::Response.new(render('score.html.erb'))
   end
 
   def make_guess
@@ -61,6 +67,18 @@ class Racker
 
   def save_game
     @request.session[:game] = @game
+  end
+
+  def save_result
+    result = { name: @request.params['name'], attempts: @game.used_attempts, hints: @game.used_hints,
+               date: Time.now.strftime('%d-%m-%Y %R') }
+    File.open('./lib/data/score.yml', 'a') { |f| f.write(YAML.dump(result)) }
+    Rack::Response.new do |response|
+      response.redirect('/score')
+    end
+  end
+
+  def load_score
   end
 
   def render(template)

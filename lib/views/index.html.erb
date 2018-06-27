@@ -12,6 +12,10 @@
     <p>Available hints:  <%= @game.available_hints %></p>
     <% if @request.session[:game_status] == 'won' %>
     <p>You won</p>
+    <form method="post" action="/save">
+      <input type="text" name="name" class="text" placeholder = "Enter your name..." required autofocus>
+      <input type="submit" value="Save" class="btn">
+    </form>
         <% elsif @game.available_attempts == 0 %>
       <p>You lost!</p>      
     <% else %>
