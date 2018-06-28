@@ -10,6 +10,8 @@ GEM
       ast (~> 2.4.0)
     powerpack (0.1.2)
     rack (2.0.5)
+    rack-test (1.0.0)
+      rack (>= 1.0, < 3)
     rainbow (3.0.0)
     rspec (3.7.0)
       rspec-core (~> 3.7.0)
@@ -41,6 +43,7 @@ PLATFORMS
 DEPENDENCIES
   lkr-codebreaker
   rack
+  rack-test
   rspec
   rubocop
 

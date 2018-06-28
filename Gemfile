@@ -7,5 +7,6 @@ gem 'lkr-codebreaker'
 
 group :development do
   gem 'rspec'
+  gem 'rack-test'
   gem 'rubocop'
 end

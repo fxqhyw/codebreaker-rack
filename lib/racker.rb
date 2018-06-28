@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'erb'
 require 'yaml'
 require 'codebreaker'
 
 class Racker
-  DATABASE = './lib/data/score.yml'.freeze
+  DATABASE = './lib/data/score.yml'
 
   def self.call(env)
     new(env).response.finish
@@ -34,7 +36,6 @@ class Racker
   end
 
   def score
-    restart
     Rack::Response.new(render('score.html.erb'))
   end
 
@@ -42,17 +43,15 @@ class Racker
     result = @game.make_guess(@request.params['guess'])
     save_game
     @request.session[:game_status] = 'won' if result == '++++'
-    Rack::Response.new do |response|
-      response.redirect('/')
-    end
+
+    redirect_to('/')
   end
 
   def hint
     @request.session[:hint] = @game.hint
     save_game
-    Rack::Response.new do |response|
-      response.redirect('/')
-    end
+
+    redirect_to('/')
   end
 
   def restart
@@ -60,9 +59,7 @@ class Racker
     @request.session[:game_status] = nil
     @request.session[:hint] = nil
 
-    Rack::Response.new do |response|
-      response.redirect('/')
-    end
+    redirect_to('/')
   end
 
   def load_game
@@ -78,14 +75,18 @@ class Racker
                date: Time.now.strftime('%d-%m-%Y %R') }
     File.open(DATABASE, 'a') { |f| f.write(result.to_yaml) }
 
-    Rack::Response.new do |response|
-      response.redirect('/score')
-    end
+    redirect_to('/score')
   end
 
   def load_score
     file = File.open(DATABASE)
     YAML.load_stream(file)
+  end
+
+  def redirect_to(path)
+    Rack::Response.new do |response|
+      response.redirect(path)
+    end
   end
 
   def render(template)
