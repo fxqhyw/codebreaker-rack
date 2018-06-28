@@ -1,0 +1,17 @@
+<table>
+  <caption>RECORDS</caption>
+  <tr>
+    <th>Name</th>
+    <th>Attempts used</th>
+    <th>Hints used</th>
+  </tr>
+
+  <% load_score.each do |record|%>
+    <tr>
+      <td><%= record[:name] %></td>
+      <td><%= record[:attempts] %></td>
+      <td><%= record[:hints] %></td>
+      <td><%= record[:date] %></td>
+    </tr>
+  <% end %>
+</table>

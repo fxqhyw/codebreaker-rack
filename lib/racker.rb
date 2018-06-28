@@ -3,6 +3,8 @@ require 'yaml'
 require 'codebreaker'
 
 class Racker
+  DATABASE = './lib/data/score.yml'.freeze
+
   def self.call(env)
     new(env).response.finish
   end
@@ -32,6 +34,7 @@ class Racker
   end
 
   def score
+    restart
     Rack::Response.new(render('score.html.erb'))
   end
 
@@ -56,6 +59,7 @@ class Racker
     @request.session[:game] = nil
     @request.session[:game_status] = nil
     @request.session[:hint] = nil
+
     Rack::Response.new do |response|
       response.redirect('/')
     end
@@ -70,15 +74,18 @@ class Racker
   end
 
   def save_result
-    result = { name: @request.params['name'], attempts: @game.used_attempts, hints: @game.used_hints,
+    result = { name: @request.params['name'], attempts: @game.used_attempts.to_s, hints: @game.used_hints.to_s,
                date: Time.now.strftime('%d-%m-%Y %R') }
-    File.open('./lib/data/score.yml', 'a') { |f| f.write(YAML.dump(result)) }
+    File.open(DATABASE, 'a') { |f| f.write(result.to_yaml) }
+
     Rack::Response.new do |response|
       response.redirect('/score')
     end
   end
 
   def load_score
+    file = File.open(DATABASE)
+    YAML.load_stream(file)
   end
 
   def render(template)
