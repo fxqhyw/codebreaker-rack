@@ -1,6 +1,4 @@
-# frozen_string_literal: true
-
-require 'erb'
+# frozen_string_literal: truerequire 'erb'
 require 'yaml'
 require 'codebreaker'
 
