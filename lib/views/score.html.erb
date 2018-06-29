@@ -1,17 +1,32 @@
-<table>
-  <caption>SCORE</caption>
-  <tr>
-    <th>Name</th>
-    <th>Attempts used</th>
-    <th>Hints used</th>
-  </tr>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Codebreaker</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/stylesheets/application.css" type="text/css">
+  </head>
+  <body>
+    <div class="conteiner">
+      <a href="/">Back</a>
+      <a href="/restart">New Game</a>
+      <table>
+        <caption>SCORE</caption>
+        <tr>
+          <th>Name</th>
+          <th>Attempts used</th>
+          <th>Hints used</th>
+          <th>Date</th>
+        </tr>
 
-  <% load_score.each do |record|%>
-    <tr>
-      <td><%= record[:name] %></td>
-      <td><%= record[:attempts] %></td>
-      <td><%= record[:hints] %></td>
-      <td><%= record[:date] %></td>
-    </tr>
-  <% end %>
-</table>
+        <% load_score.each do |record|%>
+          <tr>
+            <td><%= record[:name] %></td>
+            <td><%= record[:attempts] %></td>
+            <td><%= record[:hints] %></td>
+            <td><%= record[:date] %></td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+  </body>
+</html>

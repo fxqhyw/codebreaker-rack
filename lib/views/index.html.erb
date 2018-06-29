@@ -6,58 +6,41 @@
     <title>Codebreaker</title>
   </head>
   <body>
+  <div class="header">
     <h1>Welcome to the Codebreaker game!</h1>
     <p>Please, enter the code which contains 4 digits from 1 to 6 to make guess or take a hint which returns the secret digits in a random order.</p>
     <p>Available attempts: <%= @game.available_attempts %></p>
     <p>Available hints:  <%= @game.available_hints %></p>
-    <a href="/score">SCORE</a>
+    <div>
+      <a href="/score">SCORE</a>
+    </div>
+  </div>
+  <div class="container">
     <% if @request.session[:game_status] == 'won' %>
-    <p>You won!</p>
-    <form method="post" action="/save">
-      <input type="text" name="name" class="text" placeholder = "Enter your name..." required autofocus>
-      <input type="submit" value="Save" class="btn">
-    </form>
-    <form class="restart" method="get" action="/restart">
-      <input class="btn" type="submit" value="Restart">
-    </form>
-        <% elsif @game.available_attempts == 0 %>
+      <p>You won!</p>
+      <%= render '_ask_name_form.html.erb' %>
+    <% elsif @game.available_attempts == 0 %>
       <p>You lost!</p>
-        <form method="post" action="/save">
-          <input type="text" name="name" class="text" placeholder = "Enter your name..." required autofocus>
-          <input type="submit" value="Save" class="btn">
-        </form> 
-        <form class="restart" method="get" action="/restart">
-          <input class="btn" type="submit" value="Restart">
-        </form>    
+      <%= render '_ask_name_form.html.erb' %>     
     <% else %>
-      <form method="post" action="/guess">
-        <input name="guess" type="text" placeholder="Type your guess here..." pattern="^[1-6]{4}" autofocus>
+      <form method="post" action="/guess" class="ask-form">
+        <input class="guess-input" name="guess" type="text" placeholder="Type your guess here..." pattern="^[1-6]{4}" autofocus>
         <input class="btn" type="submit" value="Submit">
       </form>
     <% end %>    
-    <table>
-      <caption>TURNS</caption>
-        <tr>
-          <th>Guess</th>
-          <th>Result</th>
-        </tr>
-        <% @game.made_guesses.each_pair do |guess, result| %>
-          <tr>
-            <td><%= guess %></td>
-            <td><%= result %></td>
-          </tr>
-        <% end %>
-      </table>
-        <form class="restart" method="get" action="/restart">
-          <input class="btn" type="submit" value="Restart">
-        </form>
+    <%= render '_guesses_table.html.erb' %>
+    <div clas="container">
+      <form method="get" action="/restart">
+        <input class="btn" type="submit" value="Restart">
+      </form>
       <% if @game.available_hints > 0 %>
-        <form class="hint" method="get" action="/hint">
-          <input class="btn" type="submit" value="Hint">
-        </form>
-      <% end %>
-      <div>
-        Hint: <%= @request.session[:hint] %>
-      </div>
+        <form method="get" action="/hint">
+        <input class="btn" type="submit" value="Hint">
+      </form>
+    </div>
+    <% end %>
+    <p>Hint: <%= @request.session[:hint] %></p>
+    </div>
+    </div>
   </body>
 </html>
