@@ -30,8 +30,12 @@ RSpec.describe Racker do
       response_200
     end
 
-    it 'stores instance of Game to the session' do
-      expect(last_request.session[:game]).to be_an_instance_of(Codebreaker::Game)
+    it 'returns body with index page content' do
+      expect(last_response.body).to include('Welcome to the Codebreaker game!')
+    end
+
+    it 'stores game_init? true value to the session' do
+      expect(last_request.session[:game_init?]).to be_truthy
     end
   end
 
@@ -73,7 +77,7 @@ RSpec.describe Racker do
     end
 
     it 'clears the session' do
-      expect(last_request.session[:game]).to be_nil
+      expect(last_request.session[:game_init?]).to be_nil
       expect(last_request.session[:game_status]).to be_nil
       expect(last_request.session[:hint]).to be_nil
     end

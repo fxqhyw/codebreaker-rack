@@ -1,9 +1,11 @@
-# frozen_string_literal: truerequire 'erb'
+# frozen_string_literal: true
+require 'erb'
 require 'yaml'
 require 'codebreaker'
 
 class Racker
-  DATABASE = './lib/data/score.yml'
+  SCORE_DATABASE = './lib/data/score.yml'
+  GAME_DATABASE = './lib/data/game.yml'
 
   def self.call(env)
     new(env).response.finish
@@ -11,7 +13,7 @@ class Racker
 
   def initialize(env)
     @request = Rack::Request.new(env)
-    @game = load_game
+    load_game
   end
 
   def response
@@ -37,10 +39,21 @@ class Racker
     Rack::Response.new(render('score.html.erb'))
   end
 
+  def load_game
+    if @request.session[:game_init?]
+      file = File.open(GAME_DATABASE)
+      @game = YAML.load_file(file)
+    else
+      @request.session[:game_init?] = true
+      @game = Codebreaker::Game.new
+      save_game
+    end
+  end
+
   def make_guess
     result = @game.make_guess(@request.params['guess'])
     save_game
-    @request.session[:game_status] = 'won' if result == '++++'
+    @request.session[:game_won?] = true if result == '++++'
 
     redirect_to('/')
   end
@@ -53,31 +66,27 @@ class Racker
   end
 
   def restart
-    @request.session[:game] = nil
+    @request.session[:game_init?] = nil
     @request.session[:game_status] = nil
     @request.session[:hint] = nil
 
     redirect_to('/')
   end
 
-  def load_game
-    @request.session[:game] ||= Codebreaker::Game.new
-  end
-
   def save_game
-    @request.session[:game] = @game
+    File.open(GAME_DATABASE, 'w') { |f| f.write(@game.to_yaml) }
   end
 
   def save_result
     result = { name: @request.params['name'], attempts: @game.used_attempts.to_s, hints: @game.used_hints.to_s,
                date: Time.now.strftime('%d-%m-%Y %R') }
-    File.open(DATABASE, 'a') { |f| f.write(result.to_yaml) }
+    File.open(SCORE_DATABASE, 'a') { |f| f.write(result.to_yaml) }
 
     redirect_to('/score')
   end
 
   def load_score
-    file = File.open(DATABASE)
+    file = File.open(SCORE_DATABASE)
     YAML.load_stream(file)
   end
 

@@ -16,7 +16,7 @@
     </div>
   </div>
   <div class="container">
-    <% if @request.session[:game_status] == 'won' %>
+    <% if @request.session[:game_status] %>
       <p>You won!</p>
       <%= render '_ask_name_form.html.erb' %>
     <% elsif @game.available_attempts == 0 %>
