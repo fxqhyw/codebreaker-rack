@@ -1,1 +1,29 @@
-
+--- !ruby/object:Codebreaker::Game
+secret_code:
+- 5
+- 4
+- 4
+- 2
+shuffled_secret_code:
+- 2
+- 4
+- 5
+- 4
+used_attempts: 1
+used_hints: 0
+made_guesses:
+  '2323': "-"
+user_code:
+- 2
+- 3
+- 2
+- 3
+zipped_codes:
+- - 5
+  - 2
+- - 4
+  - 3
+- - 4
+  - 2
+- - 2
+  - 3

@@ -6,6 +6,15 @@ require 'codebreaker'
 class Racker
   SCORE_DATABASE = './lib/data/score.yml'
   GAME_DATABASE = './lib/data/game.yml'
+  WINNING_RESULT = '++++'
+  ROUTES = {
+    '/' => :index,
+    '/guess' => :make_guess,
+    '/hint' => :hint,
+    '/restart' => :restart,
+    '/save' => :save_result,
+    '/score' => :score
+  }.freeze
 
   def self.call(env)
     new(env).response.finish
@@ -17,16 +26,8 @@ class Racker
   end
 
   def response
-    case @request.path
-    when '/' then index
-    when '/guess' then make_guess
-    when '/hint' then hint
-    when '/restart' then restart
-    when '/save' then save_result
-    when '/score' then score
-    else
-      Rack::Response.new('Not Found', 404)
-    end
+    return send(ROUTES[@request.path]) if @request.path
+    Rack::Response.new('Not Found', 404)
   end
 
   private
@@ -53,7 +54,7 @@ class Racker
   def make_guess
     result = @game.make_guess(@request.params['guess'])
     save_game
-    @request.session[:game_won?] = true if result == '++++'
+    @request.session[:game_won?] = true if result == WINNING_RESULT
 
     redirect_to('/')
   end
@@ -67,7 +68,7 @@ class Racker
 
   def restart
     @request.session[:game_init?] = nil
-    @request.session[:game_status] = nil
+    @request.session[:game_won?] = nil
     @request.session[:hint] = nil
 
     redirect_to('/')
