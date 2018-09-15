@@ -26,7 +26,7 @@ class Racker
   end
 
   def response
-    return send(ROUTES[@request.path]) if @request.path
+    return send(ROUTES[@request.path]) if ROUTES.key?(@request.path)
     Rack::Response.new('Not Found', 404)
   end
 
