@@ -1,0 +1,13 @@
+  <table>
+    <caption>TURNS</caption>
+    <tr>
+      <th>Guess</th>
+      <th>Result</th>
+    </tr>
+    <% @game.made_guesses.each_pair do |guess, result| %>
+    <tr>
+      <td><%= guess %></td>
+      <td><%= result %></td>
+    </tr>
+    <% end %>
+  </table>
